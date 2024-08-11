@@ -1,18 +1,35 @@
 import { useTranslation } from "react-i18next";
 
 // styles
-import { greyColor, primaryColor } from "../../../styles/colors";
+import { errorColor, greyColor, primaryColor } from "../../../styles/colors";
 import { shadowsStyles } from "../../../styles/shadows";
 
 // components
-import { Text, View } from "react-native";
+import { Text, View, Button } from "react-native";
 import { Avatar, Badge } from "react-native-elements";
 import IBaseUserModel from "../../../models/db/User/BaseUserModel/IBaseUserModel";
+import { formStyles } from "../../../styles/form";
+import { NavigationProp, useNavigation } from "@react-navigation/native";
+import LeftDrawerStackParamList from "../../../types/LeftDrawerStackParamListTypes";
 
-type Props = { user: IBaseUserModel; children?: JSX.Element };
+type Props = {
+  user: IBaseUserModel;
+  children?: JSX.Element;
+  withChangePasswordButton?: boolean;
+};
 
-const UserCard = ({ user, children }: Props) => {
+const UserCard = ({
+  user,
+  children,
+  withChangePasswordButton = false,
+}: Props) => {
   const { t } = useTranslation();
+
+  const navigator = useNavigation<NavigationProp<LeftDrawerStackParamList>>();
+
+  function handleOnChangePassword() {
+    navigator.navigate("ChangeUserPassword", { id: user.id.toString() });
+  }
 
   return (
     <View
@@ -80,6 +97,24 @@ const UserCard = ({ user, children }: Props) => {
             color: greyColor.main.value,
           }}
         >{`${user.email} | ${user.phone}`}</Text>
+
+        {withChangePasswordButton && (
+          <View
+            style={{
+              borderWidth: 1,
+              borderRadius: 10,
+              width: "80%",
+              overflow: "hidden",
+              marginTop: 10,
+            }}
+          >
+            <Button
+              onPress={handleOnChangePassword}
+              title={t("FORMS.USER.CHANGE_USER_PASSWORD").toUpperCase()}
+              color={errorColor.main.value}
+            />
+          </View>
+        )}
       </View>
 
       {children}

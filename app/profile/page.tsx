@@ -26,7 +26,9 @@ const ProfileScreen = ({ navigation, route }: Props) => {
       {isLoading && <ActivityIndicator />}
       {!isLoading && error && <ErrorMessage message={t(error)} />}
 
-      {!isLoading && user && <UserCard user={user} />}
+      {!isLoading && user && (
+        <UserCard user={user} withChangePasswordButton={true} />
+      )}
     </SafeAreaView>
   );
 };

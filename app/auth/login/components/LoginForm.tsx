@@ -16,10 +16,18 @@ import LocalStorageUtility from "../../../../utilities/LocalStorageUtility";
 import LocalStorageKeyTypes from "../../../../types/LocalStorageKeyTypes";
 
 // components
-import { Image, ScrollView, Text, TextInput, View } from "react-native";
-import { Button } from "react-native-elements";
+import {
+  Image,
+  ScrollView,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { Button, Icon } from "react-native-elements";
 import ErrorMessage from "../../../../components/messages/ErrorMessage";
 import RootStackParamList from "../../../../types/RootStackParamListTypes";
+import { primaryColor } from "../../../../styles/colors";
 
 // images
 const logo = require("../../../../assets/images/shop_logo.png");
@@ -35,6 +43,8 @@ export default function LoginForm() {
 
   const [email, setEmail] = useState((lastLogin as any)?.email ?? "");
   const [password, setPassword] = useState((lastLogin as any)?.password ?? "");
+
+  const [hiddenPassword, setHiddenPassword] = useState(true);
 
   const { isLoading, error, login } = useLoginHook();
 
@@ -100,15 +110,34 @@ export default function LoginForm() {
           autoCorrect={false}
           autoCapitalize="none"
         />
-        <TextInput
-          style={formStyles.input}
-          placeholder={t("FORMS.LOGIN.PASSWORD")}
-          secureTextEntry
-          value={password}
-          onChangeText={setPassword}
-          autoCorrect={false}
-          autoCapitalize="none"
-        />
+        <View
+          style={{
+            ...containerStyles.containerRow,
+            alignItems: "center",
+            gap: 5,
+          }}
+        >
+          <TextInput
+            style={{ ...formStyles.input, flex: 1 }}
+            placeholder={t("FORMS.LOGIN.PASSWORD")}
+            secureTextEntry={hiddenPassword}
+            value={password}
+            onChangeText={setPassword}
+            autoCorrect={false}
+            autoCapitalize="none"
+          />
+          <TouchableOpacity
+            onPress={() => setHiddenPassword((prevState) => !prevState)}
+          >
+            <Icon
+              reverse
+              name={hiddenPassword ? "eye" : "eye-slash"}
+              type="font-awesome"
+              color={primaryColor.light.value}
+              size={15}
+            />
+          </TouchableOpacity>
+        </View>
       </View>
       {/* <View style={formStyles.rememberView}>
         <View style={formStyles.switch}>
